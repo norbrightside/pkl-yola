@@ -7,12 +7,14 @@ session_start(); // Mulai session
 ?>
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" type="text/css" href="assets/style.css">
-   <head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>  
+<head>
+   <nav class="navbar-fixed-top">
+      <div class="container-fluid">
       <title>Dashboard</title>
-   </head>
-   <body>
-   <ul id="menu">
+      <ul class="nav navbar-nav" id="menu">
       <li><a href="dashboard.php">Dashboard</a></li>
       <li><a href="sales.php">Penjualan</a></li>
       <li><a href="production.php">Produksi</a></li>
@@ -20,9 +22,14 @@ session_start(); // Mulai session
       <li><a href="products.php">Barang Setelah Produksi</a></li>
       <li><a href="index.php">Logout</a></li>
    </ul>
+   </div>
+   </head>
+   <body>
+   <div class="container">
+
       <h2>Selamat Datang, <?php echo $_SESSION['username']; ?></h2>
       <h3>Stok Bahan Baku</h3>
-      <table>
+      <table class="table table-striped">
          <tr>
             <th>ID Bahan Baku</th>
             <th>Nama Bahan Baku</th>
@@ -38,47 +45,19 @@ session_start(); // Mulai session
             <td><?php echo $row['material_name']; ?></td>
             <?php
                $material_id = $row['material_id'];
-               $stock_query = mysqli_query($koneksi, "SELECT * FROM stock WHERE material_id = '$material_id'"); // Ambil data stok pada tabel stock
+               $stock_query = mysqli_query($koneksi, "SELECT * FROM raw_materials WHERE material_id = '$material_id'"); // Ambil data stok pada tabel stock
                $stock = mysqli_fetch_array($stock_query);
             
             ?>
             
-            <td><?php echo $stock['stock_qty']; ?></td>
+            <td><?php echo $stock['material_unit']; ?></td>
             <td>Rp <?php echo number_format($row['material_unit_price'], 2, ',', '.'); ?></td>
          </tr>
          <?php
             }
          ?>
       </table>
-      <h3>Stok Barang Setelah Produksi</h3>
-      <table>
-         <tr>
-            <th>ID Barang</th>
-            <th>Nama Barang</th>
-            <th>Sisa Stok</th>
-            <th>Harga per Unit</th>
-         </tr>
-         <?php
-            $product_query = mysqli_query($koneksi, "SELECT * FROM raw_materials"); // Ambil data dari tabel bahan baku
-            while($product_row = mysqli_fetch_array($product_query)) { // Ambil setiap baris data bahan baku
-               $product_id = $product_row['material_id'];
-               $production_query = mysqli_query($koneksi, "SELECT SUM(production_qty) as total_production FROM productions WHERE material_id = '$product_id'"); // Hitung total produksi
-               $production = mysqli_fetch_array($production_query);
-               $sale_query = mysqli_query($koneksi, "SELECT SUM(sale_qty) as total_sale FROM sales WHERE material_id = '$product_id'"); // Hitung total penjualan
-               $sale = mysqli_fetch_array($sale_query);
-               $stock_query = mysqli_query($koneksi, "SELECT * FROM stock WHERE material_id = '$product_id'"); // Ambil data stok pada tabel stock
-               $stock = mysqli_fetch_array($stock_query);
-         ?>
-         <tr>
-            <td><?php echo $product_row['material_id']; ?></td>
-            <td><?php echo $product_row['material_name']; ?></td>
-            <td><?php echo $stock['stock_qty'] + $production['total_production'] - $sale['total_sale'] ?></td>
-            <td>Rp <?php echo number_format($product_row['material_unit_price'], 2, ',', '.'); ?></td>
-         </tr>
-         <?php
-            }
-         ?>
-      </table>
+   </div>
       <br>
       <a href="logout.php">Logout</a>
    </body>
