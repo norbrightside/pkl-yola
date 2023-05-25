@@ -20,6 +20,7 @@ session_start(); // Mulai session
       <li><a href="production.php">Produksi</a></li>
       <li><a href="raw_materials.php">Bahan Baku</a></li>
       <li><a href="products.php">Barang Setelah Produksi</a></li>
+      <li><a href="supplier.php">Supplier</a></li>
       <li><a href="index.php">Logout</a></li>
    </ul>
    </div>
